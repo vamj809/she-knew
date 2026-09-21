@@ -19,14 +19,23 @@ const sansInvitation = Josefin_Sans({
 export const metadata: Metadata = {
   title: 'Ella sabía...',
   description: 'Algún día pasaría... una pequeña flor hecha para ti.',
+  applicationName: 'Ella sabía...',
+  manifest: '/manifest.webmanifest',
   icons: {
+    // El favicon de pestaña normal se mantiene sin cambios; los íconos del
+    // manifiesto PWA (instalación/pantalla de inicio) viven aparte, en manifest.ts.
     icon: '/icon.svg',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Ella sabía...',
   },
 }
 
 export const viewport: Viewport = {
   colorScheme: 'light',
-  themeColor: '#fef3c7',
+  themeColor: '#f5b820',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,

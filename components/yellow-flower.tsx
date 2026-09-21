@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type CSSProperties } from "react"
 
 const PETAL_COUNT = 12
 
@@ -27,6 +27,58 @@ function Petal({ index, bloomed }: { index: number; bloomed: boolean }) {
         }}
         aria-hidden="true"
       />
+    </div>
+  )
+}
+
+// Pétalos que caen lentamente de fondo, efecto ambiental continuo.
+function FallingPetals() {
+  const petals = Array.from({ length: 10 })
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      {petals.map((_, i) => {
+        const left = (i * 47 + 13) % 100
+        const width = 10 + ((i * 5) % 10)
+        const duration = 10 + ((i * 4) % 12)
+        const delay = -((i * 1.7) % duration)
+        const drift = (i % 2 === 0 ? 1 : -1) * (20 + ((i * 6) % 30))
+        return (
+          <span
+            key={i}
+            className="animate-leaf-fall absolute -top-10 block rounded-[60%_40%_60%_40%]"
+            style={
+              {
+                left: `${left}%`,
+                width,
+                height: width * 0.7,
+                background:
+                  i % 2 === 0
+                    ? "linear-gradient(135deg, #ffe266, #f5b820)"
+                    : "linear-gradient(135deg, #ffd84d, #e59b0c)",
+                opacity: 0.55,
+                animationDuration: `${duration}s`,
+                animationDelay: `${delay}s`,
+                "--drift": `${drift}px`,
+              } as CSSProperties
+            }
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+// Invitación flotante a tocar la flor, visible mientras no ha florecido.
+function FloatingHint({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`pointer-events-none absolute left-1/2 top-[10%] z-10 -translate-x-1/2 transition-opacity duration-700 ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <span className="animate-hint-float inline-block rounded-full bg-white/70 px-4 py-1.5 text-sm font-medium text-amber-800 shadow-sm backdrop-blur">
+        Toca la flor 🌼
+      </span>
     </div>
   )
 }
@@ -63,7 +115,6 @@ function Pollen() {
 
 export function YellowFlower() {
   const [bloomed, setBloomed] = useState(false)
-  const [revealed, setRevealed] = useState(false)
 
   return (
     <main
@@ -73,6 +124,9 @@ export function YellowFlower() {
           "linear-gradient(180deg, #fffdf5 0%, #fff2c4 45%, #ffe4a3 75%, #f7cf8f 100%)",
       }}
     >
+      <FallingPetals />
+      <FloatingHint visible={!bloomed} />
+
       {/* Encabezado */}
       <header className="z-10 text-center">
         <p className="text-sm font-medium uppercase tracking-[0.25em] text-amber-700/80">
@@ -90,7 +144,7 @@ export function YellowFlower() {
         <button
           type="button"
           onClick={() => setBloomed(true)}
-          aria-label={bloomed ? "Flor florecida" : "Toca para hacer florecer la flor"}
+          aria-label={bloomed ? "Flor florecida" : "Toca para hacer florecer la flor y ver el mensaje"}
           className="group relative flex flex-col items-center outline-none"
         >
           <div className="animate-sway relative flex flex-col items-center">
@@ -149,35 +203,20 @@ export function YellowFlower() {
               </div>
             </div>
           </div>
-
-          {!bloomed && (
-            <span className="animate-breathe mt-4 rounded-full bg-white/70 px-4 py-1.5 text-sm font-medium text-amber-800 shadow-sm backdrop-blur">
-              Toca la flor 🌼
-            </span>
-          )}
         </button>
       </section>
 
       {/* Mensaje */}
       <footer className="z-10 flex w-full max-w-sm flex-col items-center text-center">
-        {bloomed && !revealed && (
-          <button
-            type="button"
-            onClick={() => setRevealed(true)}
-            className="animate-rise-in rounded-full bg-amber-500 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-amber-500/30 transition-transform active:scale-95"
-          >
-            Leer el mensaje
-          </button>
-        )}
-
-        {revealed && (
-          <div className="animate-rise-in rounded-3xl bg-white/75 p-6 shadow-xl shadow-amber-900/10 backdrop-blur">
-            <p className="text-pretty font-serif text-lg leading-relaxed text-amber-900">
+        {bloomed && (
+          <div className="animate-rise-in max-w-xs">
+            {/* Placeholder — reemplazar con el mensaje real */}
+            <p className="text-pretty font-serif text-lg leading-relaxed text-amber-900 [text-shadow:0_2px_16px_rgba(255,253,245,0.9)]">
               En el día de la flor amarilla, esta es para ti.
             </p>
-              <p className="mt-3 text-pretty text-sm leading-relaxed text-amber-800/90">
-                No es de plástico ni se marchita: florece cada vez que la miras y lleva todo lo que siento por ti 💛
-              </p>
+            <p className="mt-3 text-pretty text-sm leading-relaxed text-amber-800/90 [text-shadow:0_2px_16px_rgba(255,253,245,0.9)]">
+              No es de plástico ni se marchita: florece cada vez que la miras y lleva todo lo que siento por ti 💛
+            </p>
           </div>
         )}
 

@@ -230,6 +230,41 @@
   animation: floatUp linear infinite;
 }
 
+/* Pétalos cayendo lentamente de fondo */
+@keyframes leafFall {
+  0% {
+    transform: translate(0, -10vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(var(--drift, 24px), 115vh) rotate(220deg);
+    opacity: 0;
+  }
+}
+.animate-leaf-fall {
+  animation: leafFall linear infinite;
+}
+
+/* Vaivén suave de la invitación a tocar la flor */
+@keyframes hintFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+.animate-hint-float {
+  animation: hintFloat 4s ease-in-out infinite;
+}
+
 /* Aparición del texto */
 @keyframes riseIn {
   0% {
@@ -249,7 +284,9 @@
   .animate-sway,
   .animate-breathe,
   .animate-glow,
-  .animate-float-up {
+  .animate-float-up,
+  .animate-leaf-fall,
+  .animate-hint-float {
     animation: none !important;
   }
 }

@@ -22,8 +22,6 @@ export const metadata: Metadata = {
   applicationName: 'Ella sabía...',
   manifest: '/manifest.webmanifest',
   icons: {
-    // El favicon de pestaña normal se mantiene sin cambios; los íconos del
-    // manifiesto PWA (instalación/pantalla de inicio) viven aparte, en manifest.ts.
     icon: '/icon.svg',
   },
   appleWebApp: {

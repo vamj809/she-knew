@@ -68,11 +68,12 @@ function FallingPetals() {
   )
 }
 
-// Invitación flotante a tocar la flor, escrita en grande detrás del brote.
+// Invitación flotante a tocar la flor, escrita en grande justo encima del brote.
+// Se ubica fuera del contenedor con animate-sway para que no se mueva de lado a lado con la flor.
 function FloatingHint({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`pointer-events-none absolute left-1/2 top-1/2 w-[92vw] max-w-sm -translate-x-1/2 -translate-y-1/2 text-center transition-opacity duration-700 ${
+      className={`pointer-events-none absolute left-1/2 top-10 z-10 w-[92vw] max-w-sm -translate-x-1/2 text-center transition-opacity duration-700 sm:top-12 ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -149,6 +150,8 @@ export function YellowFlower() {
           aria-label={bloomed ? "Flor florecida" : "Toca para hacer florecer la flor y ver el mensaje"}
           className="group relative flex flex-col items-center outline-none"
         >
+          <FloatingHint visible={!bloomed} />
+
           <div className="animate-sway relative flex flex-col items-center">
             {/* Flor */}
             <div className="relative h-56 w-56 sm:h-64 sm:w-64">
@@ -166,8 +169,6 @@ export function YellowFlower() {
                 className="absolute left-1/2 top-1/2 h-1/2 w-2 -translate-x-1/2 rounded-full bg-emerald-500"
                 aria-hidden="true"
               />
-
-              <FloatingHint visible={!bloomed} />
 
               {/* Pétalos */}
               <div className="absolute inset-0">

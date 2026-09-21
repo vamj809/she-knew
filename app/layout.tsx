@@ -1,6 +1,13 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import { Patrick_Hand } from 'next/font/google'
 import './globals.css'
+
+const handwriting = Patrick_Hand({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-handwriting',
+})
 
 export const metadata: Metadata = {
   title: 'Ella sabía...',
@@ -26,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" className={handwriting.variable}>
       <body className="antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

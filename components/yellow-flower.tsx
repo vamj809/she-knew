@@ -68,16 +68,19 @@ function FallingPetals() {
   )
 }
 
-// Invitación flotante a tocar la flor, centrada sobre la flor mientras no ha florecido.
+// Invitación flotante a tocar la flor, escrita en grande detrás del brote.
 function FloatingHint({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-center transition-opacity duration-700 ${
+      className={`pointer-events-none absolute left-1/2 top-1/2 w-[92vw] max-w-sm -translate-x-1/2 -translate-y-1/2 text-center transition-opacity duration-700 ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <span className="animate-hint-float inline-block text-lg font-medium text-white [text-shadow:0_2px_10px_rgba(120,70,10,0.45)] sm:text-xl">
-        Toca la flor 🌼
+      <span
+        className="animate-hint-float inline-block text-4xl leading-tight text-white [text-shadow:0_4px_20px_rgba(120,70,10,0.5)] sm:text-5xl"
+        style={{ fontFamily: "var(--font-handwriting)" }}
+      >
+        Toca la flor
       </span>
     </div>
   )
@@ -158,6 +161,14 @@ export function YellowFlower() {
                 aria-hidden="true"
               />
 
+              {/* Cuello que conecta el centro con el tallo */}
+              <div
+                className="absolute left-1/2 top-1/2 h-1/2 w-2 -translate-x-1/2 rounded-full bg-emerald-500"
+                aria-hidden="true"
+              />
+
+              <FloatingHint visible={!bloomed} />
+
               {/* Pétalos */}
               <div className="absolute inset-0">
                 {Array.from({ length: PETAL_COUNT }).map((_, i) => (
@@ -184,8 +195,6 @@ export function YellowFlower() {
                   ))}
                 </div>
               </div>
-
-              <FloatingHint visible={!bloomed} />
             </div>
 
             {/* Tallo y hojas */}

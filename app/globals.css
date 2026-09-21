@@ -268,6 +268,21 @@
   animation: hintFloat 6s ease-in-out infinite;
 }
 
+/* Revelado sutil del emblema familiar dentro del centro, tras el florecimiento */
+@keyframes emblemReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+.animate-emblem-reveal {
+  animation: emblemReveal 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Aparición del texto */
 @keyframes riseIn {
   0% {

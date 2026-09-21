@@ -1,8 +1,16 @@
 "use client"
 
-import { useState, type CSSProperties } from "react"
+import { useEffect, useState, type CSSProperties } from "react"
 
 const PETAL_COUNT = 12
+const BLOOM_MS = 1700
+const MESSAGE_DELAY_MS = BLOOM_MS + 700
+
+// Ruido pseudoaleatorio determinista (mismo resultado en servidor y cliente).
+function pseudoRandom(seed: number) {
+  const x = Math.sin(seed * 12.9898) * 43758.5453
+  return x - Math.floor(x)
+}
 
 // Un pétalo individual de la flor, posicionado en círculo alrededor del centro.
 function Petal({ index, bloomed }: { index: number; bloomed: boolean }) {
@@ -13,8 +21,8 @@ function Petal({ index, bloomed }: { index: number; bloomed: boolean }) {
       style={{
         transform: `translate(-50%, -100%) rotate(${angle}deg) scale(${bloomed ? 1 : 0.12})`,
         opacity: bloomed ? 1 : 0,
-        transition: `transform 900ms cubic-bezier(0.22, 1, 0.36, 1) ${index * 45}ms, opacity 700ms ease ${
-          index * 45
+        transition: `transform 1500ms cubic-bezier(0.22, 1, 0.36, 1) ${index * 70}ms, opacity 1200ms ease ${
+          index * 70
         }ms`,
       }}
     >
@@ -31,34 +39,52 @@ function Petal({ index, bloomed }: { index: number; bloomed: boolean }) {
   )
 }
 
-// Pétalos que caen lentamente de fondo, efecto ambiental continuo.
-function FallingPetals() {
-  const petals = Array.from({ length: 10 })
+// Pétalos que caen de fondo. Antes de florecer la escena se mantiene casi
+// inmóvil; después del florecimiento aumentan en número, tamaño y variedad.
+function FallingPetals({ dense }: { dense: boolean }) {
+  const count = dense ? 16 : 0
+  const petals = Array.from({ length: count })
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       {petals.map((_, i) => {
-        const left = (i * 47 + 13) % 100
-        const width = 10 + ((i * 5) % 10)
-        const duration = 10 + ((i * 4) % 12)
-        const delay = -((i * 1.7) % duration)
-        const drift = (i % 2 === 0 ? 1 : -1) * (20 + ((i * 6) % 30))
+        const r1 = pseudoRandom(i * 3 + 1)
+        const r2 = pseudoRandom(i * 3 + 2)
+        const r3 = pseudoRandom(i * 3 + 3)
+        const r4 = pseudoRandom(i * 5 + 7)
+        const r5 = pseudoRandom(i * 7 + 11)
+        const r6 = pseudoRandom(i * 11 + 4)
+        const r7 = pseudoRandom(i * 13 + 9)
+
+        const isForeground = r1 > 0.78
+        const width = isForeground ? 22 + r2 * 8 : 10 + r2 * 8
+        const left = r3 * 100
+        const duration = 11 + r4 * 9
+        const delay = -(r5 * duration)
+        const drift = (r6 > 0.5 ? 1 : -1) * (18 + r7 * 55)
+        const rotation = 140 + pseudoRandom(i * 17 + 5) * 200
+        const peak = isForeground ? 0.72 : 0.38 + r2 * 0.22
+
         return (
           <span
             key={i}
-            className="animate-leaf-fall absolute -top-10 block rounded-[60%_40%_60%_40%]"
+            className={`animate-leaf-fall absolute -top-10 block rounded-[60%_40%_60%_40%] ${
+              isForeground ? "" : "blur-[0.4px]"
+            }`}
             style={
               {
                 left: `${left}%`,
                 width,
-                height: width * 0.7,
-                background:
-                  i % 2 === 0
-                    ? "linear-gradient(135deg, #ffe266, #f5b820)"
-                    : "linear-gradient(135deg, #ffd84d, #e59b0c)",
-                opacity: 0.55,
+                height: width * 0.72,
+                background: isForeground
+                  ? "linear-gradient(135deg, #ffd84d, #e08d0c)"
+                  : i % 2 === 0
+                    ? "linear-gradient(135deg, #fff3c9, #ffe266)"
+                    : "linear-gradient(135deg, #ffe266, #ffd84d)",
                 animationDuration: `${duration}s`,
                 animationDelay: `${delay}s`,
                 "--drift": `${drift}px`,
+                "--rotate": `${rotation}deg`,
+                "--peak": peak,
               } as CSSProperties
             }
           />
@@ -68,21 +94,21 @@ function FallingPetals() {
   )
 }
 
-// Invitación flotante a tocar la flor, escrita en grande justo encima del brote.
-// Se ubica fuera del contenedor con animate-sway para que no se mueva de lado a lado con la flor.
-function FloatingHint({ visible }: { visible: boolean }) {
+// Invitación previa al florecimiento: una frase íntima y el gesto que se pide.
+// Vive fuera del contenedor con animate-sway para no moverse de lado a lado con la flor.
+function TapPrompt({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`pointer-events-none absolute left-1/2 top-10 z-10 w-[92vw] max-w-sm -translate-x-1/2 text-center transition-opacity duration-700 sm:top-12 ${
+      className={`pointer-events-none absolute left-1/2 top-6 z-10 w-[80vw] max-w-xs -translate-x-1/2 text-center transition-opacity duration-700 sm:top-8 ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <span
-        className="animate-hint-float inline-block text-4xl leading-tight text-white [text-shadow:0_4px_20px_rgba(120,70,10,0.5)] sm:text-5xl"
-        style={{ fontFamily: "var(--font-handwriting)" }}
-      >
-        Toca la flor
-      </span>
+      <p className="text-xs font-medium tracking-wide text-amber-800/70">
+        Encontré una excusa para hacerte algo.
+      </p>
+      <p className="animate-hint-float mt-2 text-base font-semibold tracking-wide text-amber-900 sm:text-lg">
+        Hazla florecer.
+      </p>
     </div>
   )
 }
@@ -119,6 +145,13 @@ function Pollen() {
 
 export function YellowFlower() {
   const [bloomed, setBloomed] = useState(false)
+  const [messageVisible, setMessageVisible] = useState(false)
+
+  useEffect(() => {
+    if (!bloomed) return
+    const timer = setTimeout(() => setMessageVisible(true), MESSAGE_DELAY_MS)
+    return () => clearTimeout(timer)
+  }, [bloomed])
 
   return (
     <main
@@ -128,16 +161,19 @@ export function YellowFlower() {
           "linear-gradient(180deg, #fffdf5 0%, #fff2c4 45%, #ffe4a3 75%, #f7cf8f 100%)",
       }}
     >
-      <FallingPetals />
+      <FallingPetals dense={bloomed} />
 
-      {/* Encabezado */}
+      {/* Encabezado — reservado desde el inicio, visible solo tras florecer */}
       <header className="z-10 text-center">
-        <p className="text-sm font-medium uppercase tracking-[0.25em] text-amber-700/80">
-          Día de la flor amarilla
+        <p
+          className="text-xs font-medium uppercase tracking-[0.3em] text-amber-700/70 transition-opacity duration-700"
+          style={{
+            opacity: bloomed ? 1 : 0,
+            transitionDelay: bloomed ? `${BLOOM_MS}ms` : "0ms",
+          }}
+        >
+          21 de septiembre
         </p>
-        <h1 className="mt-2 text-balance font-serif text-2xl font-semibold text-amber-900">
-          Una flor amarilla para ti
-        </h1>
       </header>
 
       {/* Escena de la flor */}
@@ -147,17 +183,17 @@ export function YellowFlower() {
         <button
           type="button"
           onClick={() => setBloomed(true)}
-          aria-label={bloomed ? "Flor florecida" : "Toca para hacer florecer la flor y ver el mensaje"}
+          aria-label={bloomed ? "Flor florecida" : "Toca para hacerla florecer"}
           className="group relative flex flex-col items-center outline-none"
         >
-          <FloatingHint visible={!bloomed} />
+          <TapPrompt visible={!bloomed} />
 
           <div className="animate-sway relative flex flex-col items-center">
             {/* Flor */}
             <div className="relative h-56 w-56 sm:h-64 sm:w-64">
               {/* Halo brillante */}
               <div
-                className={`animate-glow absolute inset-0 rounded-full blur-2xl transition-opacity duration-700 ${
+                className={`animate-glow absolute inset-0 rounded-full blur-2xl transition-opacity delay-100 duration-1000 ${
                   bloomed ? "opacity-100" : "opacity-0"
                 }`}
                 style={{ background: "radial-gradient(circle, #ffe266 0%, transparent 65%)" }}
@@ -179,7 +215,7 @@ export function YellowFlower() {
 
               {/* Centro */}
               <div
-                className={`animate-breathe absolute left-1/2 top-1/2 flex h-[34%] w-[34%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-transform duration-700 ${
+                className={`animate-breathe absolute left-1/2 top-1/2 flex h-[34%] w-[34%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-transform delay-150 duration-1000 ${
                   bloomed ? "scale-100" : "scale-90"
                 }`}
                 style={{
@@ -198,17 +234,12 @@ export function YellowFlower() {
               </div>
             </div>
 
-            {/* Tallo y hojas */}
+            {/* Tallo largo, con una sola hoja asimétrica */}
             <div className="relative -mt-2 flex flex-col items-center">
-              <div className="relative h-40 w-2 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700">
+              <div className="relative h-48 w-2 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700">
                 <span
-                  className="absolute left-1/2 top-8 h-8 w-14 -translate-x-[10%] rounded-[100%] bg-emerald-500"
-                  style={{ transform: "rotate(-35deg)" }}
-                  aria-hidden="true"
-                />
-                <span
-                  className="absolute left-1/2 top-16 h-8 w-14 -translate-x-[90%] rounded-[100%] bg-emerald-600"
-                  style={{ transform: "rotate(35deg)" }}
+                  className="absolute left-1/2 top-12 h-6 w-12 -translate-x-[15%] rounded-[100%] bg-emerald-500/90"
+                  style={{ transform: "rotate(-30deg)" }}
                   aria-hidden="true"
                 />
               </div>
@@ -219,19 +250,43 @@ export function YellowFlower() {
 
       {/* Mensaje */}
       <footer className="z-10 flex w-full max-w-sm flex-col items-center text-center">
-        {bloomed && (
-          <div className="animate-rise-in max-w-xs">
-            {/* Placeholder — reemplazar con el mensaje real */}
-            <p className="text-pretty font-serif text-lg leading-relaxed text-amber-900 [text-shadow:0_2px_16px_rgba(255,253,245,0.9)]">
-              En el día de la flor amarilla, esta es para ti.
+        {messageVisible && (
+          <div className="max-w-xs" style={{ fontFamily: "var(--font-serif-display)" }}>
+            <p className="animate-rise-in text-pretty text-xl leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl">
+              No quería simplemente mandarte una flor amarilla.
             </p>
-            <p className="mt-3 text-pretty text-sm leading-relaxed text-amber-800/90 [text-shadow:0_2px_16px_rgba(255,253,245,0.9)]">
-              No es de plástico ni se marchita: florece cada vez que la miras y lleva todo lo que siento por ti 💛
+            <p
+              className="animate-rise-in mt-3 text-pretty text-xl font-medium leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
+              style={{ animationDelay: "260ms" }}
+            >
+              Quería hacerte una.
+            </p>
+            <p
+              className="animate-rise-in mt-5 text-pretty text-lg leading-relaxed text-amber-900/90 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)]"
+              style={{ animationDelay: "520ms" }}
+            >
+              Porque después de tantos años,
+              <br />
+              todavía me gusta encontrar pequeñas formas de decirte
+              <br />
+              que pienso en ti.
+            </p>
+            <p
+              className="animate-rise-in mt-5 text-pretty text-lg italic leading-relaxed text-amber-900/80 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)]"
+              style={{ animationDelay: "780ms" }}
+            >
+              Esta es la de hoy.
+            </p>
+            <p
+              className="animate-rise-in mt-5 text-pretty text-xl font-medium leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
+              style={{ animationDelay: "1040ms" }}
+            >
+              Feliz día de las flores amarillas, mi amor.
             </p>
           </div>
         )}
 
-        <p className="mt-6 text-xs text-amber-700/60">Hecho con cariño para ti</p>
+        <p className="mt-6 text-xs tracking-widest text-amber-700/40">21 · 09 · 2026</p>
       </footer>
     </main>
   )

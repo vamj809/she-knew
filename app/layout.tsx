@@ -1,17 +1,18 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Patrick_Hand } from 'next/font/google'
+import { Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 
-const handwriting = Patrick_Hand({
+const serifDisplay = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: '400',
-  variable: '--font-handwriting',
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif-display',
 })
 
 export const metadata: Metadata = {
   title: 'Ella sabía...',
-  description: 'Un regalo digital para el día de la flor amarilla. Toca la flor y deja que florezca.',
+  description: 'Un regalo digital para el día de las flores amarillas. Hazla florecer.',
   generator: 'v0.app',
   icons: {
     icon: '/icon.svg',
@@ -33,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={handwriting.variable}>
+    <html lang="es" className={serifDisplay.variable}>
       <body className="antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

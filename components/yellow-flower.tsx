@@ -265,7 +265,7 @@ export function YellowFlower() {
               </div>
             </div>
 
-            {/* Tallo largo, con una sola hoja asimétrica */}
+            {/* Tallo largo, con una hoja asimétrica desde el inicio */}
             <div className="relative z-0 -mt-2 flex flex-col items-center">
               <div className="relative h-48 w-2 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700">
                 <span
@@ -273,6 +273,21 @@ export function YellowFlower() {
                   style={{ transform: "rotate(-30deg)" }}
                   aria-hidden="true"
                 />
+
+                {/* Segunda hoja, revelada como parte del florecimiento: lado opuesto,
+                    más abajo, más pequeña y en un ángulo distinto para no verse simétrica */}
+                {bloomed && (
+                  <span
+                    className="absolute left-1/2 top-20 h-4 w-8 -translate-x-[85%]"
+                    style={{ transform: "rotate(50deg)" }}
+                    aria-hidden="true"
+                  >
+                    <span
+                      className="animate-leaf-unfurl block h-full w-full rounded-[100%] bg-emerald-600/90"
+                      style={{ animationDelay: "300ms" }}
+                    />
+                  </span>
+                )}
               </div>
             </div>
           </div>

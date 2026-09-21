@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond } from 'next/font/google'
+import { Cormorant_Garamond, Josefin_Sans } from 'next/font/google'
 import './globals.css'
 
 const serifDisplay = Cormorant_Garamond({
@@ -10,10 +10,15 @@ const serifDisplay = Cormorant_Garamond({
   variable: '--font-serif-display',
 })
 
+const sansInvitation = Josefin_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-sans-invitation',
+})
+
 export const metadata: Metadata = {
   title: 'Ella sabía...',
-  description: 'Un regalo digital para el día de las flores amarillas. Hazla florecer.',
-  generator: 'v0.app',
+  description: 'Algún día pasaría... una pequeña flor hecha para ti.',
   icons: {
     icon: '/icon.svg',
   },
@@ -34,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={serifDisplay.variable}>
+    <html lang="es" className={`${serifDisplay.variable} ${sansInvitation.variable}`}>
       <body className="antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

@@ -100,15 +100,16 @@ function FallingPetals({ dense }: { dense: boolean }) {
 function TapPrompt({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`pointer-events-none absolute left-1/2 top-6 z-10 w-[80vw] max-w-xs -translate-x-1/2 text-center transition-opacity duration-700 sm:top-8 ${
+      className={`pointer-events-none absolute left-1/2 top-0 z-10 w-[85vw] max-w-sm -translate-x-1/2 -translate-y-[calc(100%+12px)] text-center transition-opacity duration-700 ${
         visible ? "opacity-100" : "opacity-0"
       }`}
+      style={{ fontFamily: "var(--font-sans-invitation)" }}
     >
-      <p className="text-xs font-medium tracking-wide text-amber-800/70">
-        Encontré una excusa para hacerte algo.
+      <p className="text-lg font-medium leading-relaxed tracking-wide text-amber-950/80 sm:text-xl">
+        Encontré una excusa para hacerte algo
       </p>
-      <p className="animate-hint-float mt-2 text-base font-semibold tracking-wide text-amber-900 sm:text-lg">
-        Hazla florecer.
+      <p className="animate-hint-float mt-4 text-sm font-medium tracking-widest text-amber-800/60">
+        Ayúdala a florecer
       </p>
     </div>
   )
@@ -198,7 +199,7 @@ export function YellowFlower() {
         <button
           type="button"
           onClick={() => setBloomed(true)}
-          aria-label={bloomed ? "Flor florecida" : "Toca para hacerla florecer"}
+          aria-label={bloomed ? "Flor florecida" : "Ayúdala a florecer"}
           className="group relative flex flex-col items-center outline-none"
         >
           <TapPrompt visible={!bloomed} />
@@ -297,7 +298,7 @@ export function YellowFlower() {
             >
               Porque después de tantos años,
               <br />
-              todavía me gusta encontrar pequeñas formas de decirte
+              todavía me gusta encontrar formas nuevas de decirte
               <br />
               que pienso en ti.
             </p>

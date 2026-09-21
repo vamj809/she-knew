@@ -297,7 +297,9 @@ export function YellowFlower() {
             >
               Porque después de tantos años,
               <br />
-              todavía me gusta encontrar pequeñas formas de decirte que pienso en ti.
+              todavía me gusta encontrar pequeñas formas de decirte
+              <br />
+              que pienso en ti.
             </p>
             <p
               className="animate-rise-in mt-5 text-pretty text-lg italic leading-relaxed text-amber-900/80 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)]"

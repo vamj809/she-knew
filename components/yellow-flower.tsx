@@ -322,11 +322,22 @@ export function YellowFlower() {
         </button>
       </section>
 
-      {/* Mensaje — el espacio se reserva desde que la flor floreció, para que el
-          mensaje entre sin que la escena dé un salto cuando aparece el texto */}
+      {/* Mensaje — el bloque crece con una transición de grid-template-rows (0fr → 1fr)
+          en vez de aparecer con su altura final de golpe, así el resto de la página
+          (la sección de la flor, que se recentra alrededor del footer) se acomoda
+          gradualmente en vez de saltar en el instante del tap */}
       <footer className="z-10 flex w-full max-w-sm flex-col items-center text-center">
-        {bloomed && (
-          <div className="max-w-xs" style={{ fontFamily: "var(--font-serif-display)" }}>
+        <div
+          className="grid w-full"
+          style={{
+            gridTemplateRows: bloomed ? "1fr" : "0fr",
+            transition: "grid-template-rows 1900ms cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        >
+          <div
+            className="mx-auto max-w-xs overflow-hidden"
+            style={{ fontFamily: "var(--font-serif-display)" }}
+          >
             <MessageLine
               visible={messageVisible}
               delayMs={0}
@@ -367,7 +378,7 @@ export function YellowFlower() {
               Feliz día de las flores amarillas, mi amor.
             </MessageLine>
           </div>
-        )}
+        </div>
 
         <p className="mt-6 text-xs tracking-widest text-amber-700/40">21 · 09 · 2026</p>
       </footer>

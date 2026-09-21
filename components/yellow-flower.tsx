@@ -68,15 +68,15 @@ function FallingPetals() {
   )
 }
 
-// Invitación flotante a tocar la flor, visible mientras no ha florecido.
+// Invitación flotante a tocar la flor, centrada sobre la flor mientras no ha florecido.
 function FloatingHint({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`pointer-events-none absolute left-1/2 top-[10%] z-10 -translate-x-1/2 transition-opacity duration-700 ${
+      className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-center transition-opacity duration-700 ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <span className="animate-hint-float inline-block rounded-full bg-white/70 px-4 py-1.5 text-sm font-medium text-amber-800 shadow-sm backdrop-blur">
+      <span className="animate-hint-float inline-block text-lg font-medium text-white [text-shadow:0_2px_10px_rgba(120,70,10,0.45)] sm:text-xl">
         Toca la flor 🌼
       </span>
     </div>
@@ -125,7 +125,6 @@ export function YellowFlower() {
       }}
     >
       <FallingPetals />
-      <FloatingHint visible={!bloomed} />
 
       {/* Encabezado */}
       <header className="z-10 text-center">
@@ -185,6 +184,8 @@ export function YellowFlower() {
                   ))}
                 </div>
               </div>
+
+              <FloatingHint visible={!bloomed} />
             </div>
 
             {/* Tallo y hojas */}

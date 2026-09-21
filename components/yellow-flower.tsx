@@ -205,7 +205,7 @@ export function YellowFlower() {
 
           <div className="animate-sway relative flex flex-col items-center">
             {/* Flor */}
-            <div className="relative h-56 w-56 sm:h-64 sm:w-64">
+            <div className="relative z-10 h-56 w-56 sm:h-64 sm:w-64">
               {/* Halo brillante */}
               <div
                 className={`animate-glow absolute inset-0 rounded-full blur-2xl transition-opacity delay-100 duration-1000 ${
@@ -252,7 +252,7 @@ export function YellowFlower() {
                 {/* Emblema familiar, revelado como un detalle oculto tras el florecimiento */}
                 {bloomed && (
                   <div
-                    className="animate-emblem-reveal h-[65%] w-[65%] text-amber-200"
+                    className="animate-emblem-reveal h-[85%] w-[85%] text-amber-200"
                     style={{
                       animationDelay: `${EMBLEM_DELAY_MS}ms`,
                       filter: "drop-shadow(0 0 4px rgba(255, 226, 102, 0.25))",
@@ -265,7 +265,7 @@ export function YellowFlower() {
             </div>
 
             {/* Tallo largo, con una sola hoja asimétrica */}
-            <div className="relative -mt-2 flex flex-col items-center">
+            <div className="relative z-0 -mt-2 flex flex-col items-center">
               <div className="relative h-48 w-2 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700">
                 <span
                   className="absolute left-1/2 top-12 h-6 w-12 -translate-x-[15%] rounded-[100%] bg-emerald-500/90"

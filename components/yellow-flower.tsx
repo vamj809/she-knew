@@ -115,6 +115,34 @@ function TapPrompt({ visible }: { visible: boolean }) {
   )
 }
 
+// Una línea del mensaje final. Se desliza y aparece con una transición continua
+// (no una animación disparada al montar), para que el mensaje entre suavemente
+// en el mismo espacio que ya quedó reservado desde que la flor floreció.
+function MessageLine({
+  visible,
+  delayMs,
+  className,
+  children,
+}: {
+  visible: boolean
+  delayMs: number
+  className: string
+  children: React.ReactNode
+}) {
+  return (
+    <p
+      className={`${className} transition-all duration-1000 ease-out`}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(14px)",
+        transitionDelay: visible ? `${delayMs}ms` : "0ms",
+      }}
+    >
+      {children}
+    </p>
+  )
+}
+
 // Emblema familiar (public/family-embrace.svg), inlineado para poder controlar
 // su color con currentColor/Tailwind — un <img src> no heredaría el color de la página.
 function FamilyEmblem() {
@@ -267,7 +295,7 @@ export function YellowFlower() {
 
             {/* Tallo largo, con una hoja asimétrica desde el inicio */}
             <div className="relative z-0 -mt-2 flex flex-col items-center">
-              <div className="relative h-48 w-2 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700">
+              <div className="relative h-40 w-2 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700">
                 <span
                   className="absolute left-1/2 top-12 h-6 w-12 -translate-x-[15%] rounded-[100%] bg-emerald-500/90"
                   style={{ transform: "rotate(-30deg)" }}
@@ -294,41 +322,50 @@ export function YellowFlower() {
         </button>
       </section>
 
-      {/* Mensaje */}
+      {/* Mensaje — el espacio se reserva desde que la flor floreció, para que el
+          mensaje entre sin que la escena dé un salto cuando aparece el texto */}
       <footer className="z-10 flex w-full max-w-sm flex-col items-center text-center">
-        {messageVisible && (
+        {bloomed && (
           <div className="max-w-xs" style={{ fontFamily: "var(--font-serif-display)" }}>
-            <p className="animate-rise-in text-pretty text-xl leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl">
+            <MessageLine
+              visible={messageVisible}
+              delayMs={0}
+              className="text-pretty text-xl leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
+            >
               No quería simplemente mandarte una flor amarilla.
-            </p>
-            <p
-              className="animate-rise-in mt-3 text-pretty text-xl font-medium leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
-              style={{ animationDelay: "260ms" }}
+            </MessageLine>
+            <MessageLine
+              visible={messageVisible}
+              delayMs={260}
+              className="mt-3 text-pretty text-xl font-medium leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
             >
               Quería hacerte una.
-            </p>
-            <p
-              className="animate-rise-in mt-5 text-pretty text-lg leading-relaxed text-amber-900/90 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)]"
-              style={{ animationDelay: "520ms" }}
+            </MessageLine>
+            <MessageLine
+              visible={messageVisible}
+              delayMs={520}
+              className="mt-5 text-pretty text-lg leading-relaxed text-amber-900/90 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)]"
             >
               Porque después de tantos años,
               <br />
               todavía me gusta encontrar formas nuevas de decirte
               <br />
               que pienso en ti.
-            </p>
-            <p
-              className="animate-rise-in mt-5 text-pretty text-lg italic leading-relaxed text-amber-900/80 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)]"
-              style={{ animationDelay: "780ms" }}
+            </MessageLine>
+            <MessageLine
+              visible={messageVisible}
+              delayMs={780}
+              className="mt-5 text-pretty text-lg italic leading-relaxed text-amber-900/80 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)]"
             >
               Esta es la de hoy.
-            </p>
-            <p
-              className="animate-rise-in mt-5 text-pretty text-xl font-medium leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
-              style={{ animationDelay: "1040ms" }}
+            </MessageLine>
+            <MessageLine
+              visible={messageVisible}
+              delayMs={1040}
+              className="mt-5 text-pretty text-xl font-medium leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
             >
               Feliz día de las flores amarillas, mi amor.
-            </p>
+            </MessageLine>
           </div>
         )}
 

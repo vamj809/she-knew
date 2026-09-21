@@ -298,21 +298,6 @@
   animation: emblemReveal 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Aparición del texto */
-@keyframes riseIn {
-  0% {
-    transform: translateY(16px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.animate-rise-in {
-  animation: riseIn 0.8s ease-out both;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-sway,
   .animate-breathe,

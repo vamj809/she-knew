@@ -375,7 +375,7 @@ export function YellowFlower() {
               delayMs={1040}
               className="mt-5 text-pretty text-xl font-medium leading-relaxed text-amber-950 [text-shadow:0_1px_3px_rgba(255,253,245,0.7)] sm:text-2xl"
             >
-              Feliz día de las flores amarillas, mi amor.
+              Feliz día de las flores amarillas, mi reina.
             </MessageLine>
           </div>
         </div>

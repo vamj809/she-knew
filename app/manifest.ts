@@ -9,10 +9,16 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: 'portrait',
     background_color: '#fffdf5',
     theme_color: '#f5b820',
-    // El mismo SVG del favicon, referenciado directamente: al ser vectorial,
-    // el navegador lo escala a cualquier tamaño que necesite (192, 512, etc.)
-    // sin generar PNGs aparte. A cambio no declaramos purpose "maskable": el
-    // arte no fue diseñado con el margen de seguridad que ese modo recorta.
-    icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
+    // El SVG del favicon no era suficiente para que Chrome/Android generen el
+    // ícono de pantalla de inicio de forma confiable, así que usamos PNG en los
+    // tamaños estándar de densidad de Android (mdpi–xxxhdpi, más 512 para Play).
+    icons: [
+      { src: '/metadata/launchericon-48x48.png', sizes: '48x48', type: 'image/png', purpose: 'any' },
+      { src: '/metadata/launchericon-72x72.png', sizes: '72x72', type: 'image/png', purpose: 'any' },
+      { src: '/metadata/launchericon-96x96.png', sizes: '96x96', type: 'image/png', purpose: 'any' },
+      { src: '/metadata/launchericon-144x144.png', sizes: '144x144', type: 'image/png', purpose: 'any' },
+      { src: '/metadata/launchericon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/metadata/launchericon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+    ],
   }
 }
